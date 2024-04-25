@@ -1,0 +1,109 @@
+﻿@model IEnumerable<Northwind.Models.Customers>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody id="customerTableBody">
+        @* @foreach (var item in Model)
+        {
+        <tr>
+        <td>
+        @Html.DisplayFor(modelItem => item.CompanyName)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.Address)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+        @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+        <a asp-action="Update" asp-route-id="@item.CustomerId">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.CustomerId">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.CustomerId">Delete</a>
+        </td>
+        </tr>
+        } *@
+    </tbody>
+</table>
+
+<nav aria-label="...">
+    <ul class="pagination" id="pagination">
+
+    </ul>
+</nav>
+
+
+
+<script>
+    var data = @Html.Raw(Json.Serialize(Model));
+
+    var pageSize = 10; // per page
+    var currentPage = 1;
+
+    function paginate() {
+        var startIndex = (currentPage - 1) * pageSize;
+        var endIndex = startIndex + pageSize;
+        var paginatedData = data.slice(startIndex, endIndex);
+
+        document.getElementById("customerTableBody").innerHTML = "";
+        document.getElementById("pagination").innerHTML = "";
+
+        paginatedData.forEach(function (item) {
+            var row = "<tr>" +
+                "<td>" + item.companyName + "</td>" +
+                "<td>" + item.address + "</td>" +
+                "<td>" + item.city + "</td>" +
+                "<td>" + item.country + "</td>" +
+                "<td>" +
+                "<a href='/Customer/Update?id=" + item.customerId + "'>Edit</a> | " +
+                "<a href='/Customer/Details?id=" + item.customerId + "'>Details</a> | " +
+                "<a href='/Customer/Delete?id=" + item.customerId + "'>Delete</a>" +
+                "</td>" +
+                "</tr>";
+            document.getElementById("customerTableBody").innerHTML += row;
+        });
+
+        var totalPages = Math.ceil(data.length / pageSize);
+        for (var i = 1; i <= totalPages; i++) {
+            var liClass = i === currentPage ? "page-item active" : "page-item";
+            var link = "<li class='" + liClass + "'><a class='page-link' href='javascript:void(0)' onclick='changePage(" + i + ")'>" + i + "</a></li>";
+            document.getElementById("pagination").innerHTML += link;
+        }
+        // Prev and Next
+        var previousPageLink = currentPage === 1 ? "<li class='page-item disabled'><span class='page-link'>Previous</span></li>" : "<li class='page-item'><a class='page-link' href='javascript:void(0)' onclick='changePage(" + (currentPage - 1) + ")'>Previous</a></li>";
+        var nextPageLink = currentPage === totalPages ? "<li class='page-item disabled'><span class='page-link'>Next</span></li>" : "<li class='page-item'><a class='page-link' href='javascript:void(0)' onclick='changePage(" + (currentPage + 1) + ")'>Next</a></li>";
+        document.getElementById("pagination").innerHTML = previousPageLink + document.getElementById("pagination").innerHTML + nextPageLink;
+    }
+
+
+    function changePage(page) {
+        currentPage = page;
+        paginate();
+    }
+    paginate();
+</script>

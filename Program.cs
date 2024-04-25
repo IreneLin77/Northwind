@@ -1,7 +1,16 @@
-var builder = WebApplication.CreateBuilder(args);
+using Northwind.DbContexts;
+using Microsoft.EntityFrameworkCore;
+using Northwind.Services;
 
+
+var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<NorthwindContext>(
+    dbContextOptions => dbContextOptions.UseSqlite("Data Source=northwind.db"));
+
+builder.Services.AddScoped<CustomerRepository>();
 
 var app = builder.Build();
 
