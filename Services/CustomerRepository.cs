@@ -23,9 +23,24 @@ namespace Northwind.Services
             return await _context.Customers.AsNoTracking().ToListAsync();
         }
 
-        public async Task<Customers> GetCustomerByIdAsync(string id)
+        public async Task<Customers?> GetCustomerByIdAsync(string id)
         {
             return await _context.Customers.Where(c => c.CustomerId == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> CustomerxistsAsync(string id)
+        {
+            return await _context.Customers.AnyAsync(c => c.CustomerId == id);
+        }
+
+        public void DeleteCustomer(Customers customer)
+        {
+            _context.Customers.Remove(customer);
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync() >= 0);
         }
 
     }

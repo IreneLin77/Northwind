@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Northwind.Services;
+using AutoMapper;
+using Northwind.Models;
 
 namespace Northwind.Controllers
 {
@@ -14,17 +16,21 @@ namespace Northwind.Controllers
     {
         private readonly ILogger<CustomerController> _logger;
         private readonly CustomerRepository _customerRepository;
-        public CustomerController(ILogger<CustomerController> logger, CustomerRepository customerRepository)
+        private readonly IMapper _mapper;
+        public CustomerController(ILogger<CustomerController> logger,
+                                  CustomerRepository customerRepository,
+                                  IMapper mapper)
         {
             _logger = logger;
             _customerRepository = customerRepository;
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet("Index", Name = "Index")]
         public async Task<IActionResult> Index()
         {
             var customer = await _customerRepository.GetCustomersAsync();
-            return View(customer);
+            return View(_mapper.Map<IEnumerable<CustomerDto>>(customer));
         }
         public IActionResult Create()
         {

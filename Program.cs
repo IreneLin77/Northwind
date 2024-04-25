@@ -12,6 +12,8 @@ builder.Services.AddDbContext<NorthwindContext>(
 
 builder.Services.AddScoped<CustomerRepository>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
