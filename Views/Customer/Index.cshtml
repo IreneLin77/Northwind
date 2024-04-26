@@ -60,6 +60,7 @@
 
 
 <script>
+    var controllerName = "/Customer";
     var data = @Html.Raw(Json.Serialize(Model));
 
     var pageSize = 10; // per page
@@ -80,9 +81,9 @@
                 "<td>" + item.city + "</td>" +
                 "<td>" + item.country + "</td>" +
                 "<td>" +
-                "<a href='/Customer/Update?id=" + item.customerId + "'>Edit</a> | " +
-                "<a href='/Customer/Details?id=" + item.customerId + "'>Details</a> | " +
-                "<a href='/Customer/Delete?id=" + item.customerId + "'>Delete</a>" +
+                "<a href='"+controllerName+"/Update?id=" + item.customerId + "'>Edit</a> | " +
+                "<a href='"+controllerName+"/Details?id=" + item.customerId + "'>Details</a> | " +
+                "<a href='#'' onclick='confirmDelete(\"" + item.customerId + "\")'>Delete</a>" +
                 "</td>" +
                 "</tr>";
             document.getElementById("customerTableBody").innerHTML += row;
@@ -106,4 +107,25 @@
         paginate();
     }
     paginate();
+
+    function confirmDelete(customerId) {
+        if (confirm('Are you sure you want to delete this customer?')) {
+        // DELETE method
+        fetch(controllerName+'/Delete?id=' + customerId, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                // reload page
+                window.location.reload();
+            } else {
+                // error handling
+                console.error('Failed to delete customer');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+    }
 </script>

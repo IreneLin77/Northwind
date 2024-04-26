@@ -11,6 +11,8 @@ namespace Northwind.Profiles
         public CustomerProfile()
         {
             CreateMap<Models.Customers, Models.CustomerDto>();
+            CreateMap<Models.CustomerUpdateDto, Models.Customers>();
+            CreateMap<Models.Customers, Models.CustomerUpdateDto>();
 
         }
     }

@@ -25,12 +25,11 @@ namespace Northwind.Services
 
         public async Task<Customers?> GetCustomerByIdAsync(string id)
         {
-            return await _context.Customers.Where(c => c.CustomerId == id).FirstOrDefaultAsync();
+            return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId == id);
         }
-
-        public async Task<bool> CustomerxistsAsync(string id)
+        public async Task<Customers?> FindCustomerAsync(string id)
         {
-            return await _context.Customers.AnyAsync(c => c.CustomerId == id);
+            return await _context.Customers.Include(c => c.Orders).FirstOrDefaultAsync(c => c.CustomerId == id);
         }
 
         public void DeleteCustomer(Customers customer)

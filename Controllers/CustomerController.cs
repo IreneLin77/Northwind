@@ -46,19 +46,50 @@ namespace Northwind.Controllers
                 return NotFound();
             }
 
-            return View(customer);
+            return View(_mapper.Map<CustomerUpdateDto>(customer));
+        }
+
+        [HttpPost("Update", Name = "Update")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(CustomerUpdateDto customer)
+        {
+            if (ModelState.IsValid)
+            {
+                var customerEntity = await _customerRepository.GetCustomerByIdAsync(customer.CustomerId);
+                if (customerEntity == null)
+                {
+                    return NotFound();
+                }
+                _mapper.Map(customer, customerEntity);
+                await _customerRepository.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpDelete("Delete", Name = "Delete")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            return View();
+            var customerEntity = await _customerRepository.FindCustomerAsync(id);
+            if (customerEntity == null)
+            {
+                return NotFound();
+            }
+
+            _customerRepository.DeleteCustomer(customerEntity);
+            await _customerRepository.SaveChangesAsync();
+
+            return Json(new { ok = true });
         }
 
         [HttpGet("Get", Name = "Get")]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            return View();
+            var customer = await _customerRepository.GetCustomerByIdAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return View(customer);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
