@@ -8,7 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<NorthwindContext>(
-    dbContextOptions => dbContextOptions.UseSqlite("Data Source=northwind.db"));
+dbContextOptions => dbContextOptions.UseSqlite(
+    builder.Configuration["ConnectionStrings:NorthwindDBConnectionString"]));
 
 builder.Services.AddScoped<CustomerRepository>();
 
