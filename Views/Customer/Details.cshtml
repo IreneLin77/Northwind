@@ -1,0 +1,52 @@
+﻿@model Northwind.Models.CustomerDetailDto
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Customer ID:</dt>
+            <dd class="col-sm-8">@Model.CustomerId</dd>
+
+            <dt class="col-sm-4">Company Name:</dt>
+            <dd class="col-sm-8">@Model.CompanyName</dd>
+
+            <dt class="col-sm-4">Contact Name:</dt>
+            <dd class="col-sm-8">@Model.ContactName</dd>
+
+            <dt class="col-sm-4">Contact Title:</dt>
+            <dd class="col-sm-8">@Model.ContactTitle</dd>
+
+            <dt class="col-sm-4">Address:</dt>
+            <dd class="col-sm-8">@Model.Address</dd>
+
+            <dt class="col-sm-4">City:</dt>
+            <dd class="col-sm-8">@Model.City</dd>
+
+            <dt class="col-sm-4">Region:</dt>
+            <dd class="col-sm-8">@Model.Region</dd>
+
+            <dt class="col-sm-4">Postal Code:</dt>
+            <dd class="col-sm-8">@Model.PostalCode</dd>
+
+            <dt class="col-sm-4">Country:</dt>
+            <dd class="col-sm-8">@Model.Country</dd>
+
+            <dt class="col-sm-4">Phone:</dt>
+            <dd class="col-sm-8">@Model.Phone</dd>
+
+            <dt class="col-sm-4">Fax:</dt>
+            <dd class="col-sm-8">@Model.Fax</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

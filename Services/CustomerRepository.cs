@@ -18,6 +18,10 @@ namespace Northwind.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public async Task AddCustomersAsync(Customers customer)
+        {
+            _context.Add(customer);
+        }
         public async Task<IEnumerable<Customers>> GetCustomersAsync()
         {
             return await _context.Customers.AsNoTracking().ToListAsync();
@@ -30,6 +34,11 @@ namespace Northwind.Services
         public async Task<Customers?> FindCustomerAsync(string id)
         {
             return await _context.Customers.Include(c => c.Orders).FirstOrDefaultAsync(c => c.CustomerId == id);
+        }
+
+        public async Task<bool> CustomerExistAsync(string id)
+        {
+            return await _context.Customers.AnyAsync(c => c.CustomerId == id);
         }
 
         public void DeleteCustomer(Customers customer)

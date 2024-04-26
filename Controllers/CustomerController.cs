@@ -32,9 +32,30 @@ namespace Northwind.Controllers
             var customer = await _customerRepository.GetCustomersAsync();
             return View(_mapper.Map<IEnumerable<CustomerDto>>(customer));
         }
+        [HttpGet("Create", Name = "Create")]
         public IActionResult Create()
         {
             return View();
+        }
+
+        [HttpPost("Create", Name = "Create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CustomerCreateDto customer)
+        {
+            var exist = await _customerRepository.CustomerExistAsync(customer.CustomerId);
+            if (exist)
+            {
+                ModelState.AddModelError("CustomerId", "Customer ID already exists.");
+                return View(customer);
+            }
+            if (ModelState.IsValid)
+            {
+                var customerEntity = _mapper.Map<Customers>(customer);
+                await _customerRepository.AddCustomersAsync(customerEntity);
+                await _customerRepository.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(customer);
         }
 
         [HttpGet("Update", Name = "Update")]
@@ -66,6 +87,7 @@ namespace Northwind.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
         [HttpDelete("Delete", Name = "Delete")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -81,15 +103,15 @@ namespace Northwind.Controllers
             return Json(new { ok = true });
         }
 
-        [HttpGet("Get", Name = "Get")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("Details", Name = "Details")]
+        public async Task<IActionResult> Details(string id)
         {
             var customer = await _customerRepository.GetCustomerByIdAsync(id);
             if (customer == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(_mapper.Map<CustomerDetailDto>(customer));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

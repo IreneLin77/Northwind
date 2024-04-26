@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Northwind.Models
 {
-    public class CustomerUpdateDto : CustomerCreateDto
+    public class CustomerDetailDto : CustomerCreateDto
     {
-
     }
 }
